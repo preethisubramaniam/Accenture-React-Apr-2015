@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Browser Scheduler</title>
+    <script>
+    (function(){
+        window.addEventListener("DOMContentLoaded", init);
+        var worker = null;
+        function init(){
+            var btnDoWork = document.getElementById("btnDoWork");
+            btnDoWork.addEventListener("click", onBtnDoWorkClick);
+
+            worker = new Worker("complexWork.js");
+            worker.addEventListener("message", onMessageFromWorker);
+        }
+        function onBtnDoWorkClick(){
+            displayMessage("Work Started");
+            worker.postMessage({
+                type : "start"
+            });
+        }
+        function onMessageFromWorker(evtArg){
+            var data = evtArg.data;
+            if (data.type === "progress"){
+                document.getElementById("progress").value = data.percentCompleted;
+            }
+            if (data.type === "completed"){
+                displayMessage("Work Completed");
+            }
+        }
+        function displayMessage(msg){
+            document.getElementById("divMessages").innerHTML += msg + "<br/>";
+        }
+
+    })();
+    </script>
+</head>
+<body>
+    <input type="text" name="" id="">
+    <input type="button" value="Do Work" id="btnDoWork">
+    <div id="divMessages"></div>
+    <progress id="progress" min="0" max="100" value="0"></progress>
+</body>
+</html>

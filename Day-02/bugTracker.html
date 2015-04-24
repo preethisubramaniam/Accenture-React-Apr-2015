@@ -4,50 +4,130 @@
 	<meta charset="UTF-8">
 	<title>Bug Tracker</title>
 	<style>
-	h1{
-		border-top : 2px solid blue;
-		border-bottom : 2px solid blue;
-		background-color: lightblue;
-		padding : 10px;
-	}
-	.closed {
-		color : red;
-		text-decoration: line-through;;
-		font-style: italic;
-		font-weight: bold;
-	}
-	.stats{
-		width: 70px;
-		border : 2px solid black;
-		font-size: 22pt;
-		background-color: #e7e7e7;
-		padding: 10px;
-		border-radius: 5px;
-		margin-bottom: 10px;
-	}
-	li{
-		cursor: pointer;
-	}
+		h1{
+			border-top : 2px solid blue;
+			border-bottom : 2px solid blue;
+			background-color: lightblue;
+			padding : 10px;
+		}
+		.closed {
+			color : red;
+			text-decoration: line-through;;
+			font-style: italic;
+			font-weight: bold;
+		}
+		.stats{
+			width: 70px;
+			border : 2px solid black;
+			font-size: 22pt;
+			background-color: #e7e7e7;
+			padding: 10px;
+			border-radius: 5px;
+			margin-bottom: 10px;
+		}
+		li{
+			cursor: pointer;
+		}
 	</style>
+	<script src="react.js"></script>
+	<script src="JSXTransformer.js"></script>
 </head>
 <body>
-	<h1>Bug Tracker</h1>
-	<div class="content">
-		<div class="stats">
-			<span class="closed">1</span> / 3
-		</div>
-		<div>
-			<label for="">Bug :</label>
-			<input type="text" name="" id="">
-			<input type="button" value="Add New">
-			<input type="button" value="Remove Completed">
-			<ol>
-				<li>Bug - 1</li>
-				<li class="closed">Bug - 2</li>
-				<li>Bug - 3</li>
-			</ol>	
-		</div>
+	
+	
 		
 	</div>
+	<script type="text/jsx">
+		var App = React.createClass({
+			getInitialState : function(){
+				return {
+					bugsList : [
+						{id : 1, title : "Unable to save data", isClosed : false},
+						{id : 2, title : "Application crashes frequently", isClosed : true},
+						{id : 3, title : "User authentication failure", isClosed : false}
+					]
+				};
+			},
+			add : function(bugTitle){
+				var newBug = {
+					title : bugTitle,
+					isClosed : false
+				};
+				var bugsList = this.state.bugsList.concat([newBug]);
+				this.setState({bugsList : bugsList});
+			},
+			removeClosed : function(){
+
+			},
+			render : function(){
+				return (
+					<div className="content">
+						<h1>Bug Tracker</h1>
+						<Stats />
+						<BugsEditor onAdd={this.add} onRemove={this.removeClosed}/>
+						<BugsList data={this.state.bugsList}/>
+					</div>
+				);
+			}
+		});
+		var Stats = React.createClass({
+			render : function(){
+				return (
+					<div className="stats">
+						<span className="closed">1</span> / 3
+					</div>
+				);
+			}
+		});
+		var BugsEditor = React.createClass({
+			addNew : function(){
+				var bugTitle = this.refs.txtBug.getDOMNode().value;
+				this.props.onAdd(bugTitle);
+			},
+			render : function(){
+				return (
+					<div>
+						<label >Bug :</label>
+						<input type="text" ref="txtBug"  />
+						<input type="button" value="Add New" onClick={this.addNew} />
+						<input type="button" value="Remove Completed" onClick={this.removeCompleted} />
+					</div>
+				);
+			}
+		});
+		var BugsList = React.createClass({
+			render : function(){
+				var bugs = this.props.data;
+				var bugItems = bugs.map(function(bug){
+					return <Bug data={bug} />
+				});
+				return (
+					<ol>
+						{bugItems}
+					</ol>
+				);
+			}
+		});
+		var Bug = React.createClass({
+			getInitialState : function(){
+				return {
+					data : this.props.data
+				}
+			},
+			toggleBug : function(){
+				var bug = {
+					id : this.state.data.id,
+					title : this.state.data.title,
+					isClosed : !this.state.data.isClosed
+				};
+				this.setState({data : bug} );
+			},
+			render : function(){
+				var bugClass = this.state.data.isClosed ? "closed" : "";
+				return <li className={bugClass} onClick={this.toggleBug}>{this.state.data.title}</li>;
+			}
+		});
+		React.render(<App />, document.body);
+	</script>
 </body>
 </html>

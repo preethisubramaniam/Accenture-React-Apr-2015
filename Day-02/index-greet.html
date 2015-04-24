@@ -11,21 +11,35 @@
 
 	<script type="text/jsx">
 		var GreetComponent = React.createClass({
+			getInitialState : function(){
+				return {
+					greetMsg : '',
+				};
+			},
 			componentWillMount : function(){
 				window.greetComponent = this;
 			},
 			handleGreet : function(e){
-				console.dir(e);
-				console.log(e.target.value + " button clicked");
+				var name = this.refs.txtName.getDOMNode().value;
+				var hour = new Date().getHours();
+				var greetMsg = '';
+				if (hour < 12){
+					greetMsg = 'Hi ' + name + ", Good Morning!";
+				} else {
+					greetMsg = 'Hi ' + name + ", Good Evening!";
+				}
+				this.setState({greetMsg : greetMsg});	
 			},
 			render : function(){
-
+				var styles = {
+					color : new Date().getHours() < 12 ?'green' : 'red'
+				};
 				return (
 					<div className="container">
 						<h1>Greet</h1>
 						<input type="text" name="" id="txtName" ref="txtName"/>
 						<input type="button" value="Greet" id="btnGreet" onClick={this.handleGreet} />
-						<div></div>
+						<div style={styles}>{this.state.greetMsg}</div>
 					</div>
 				);
 			}

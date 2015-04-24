@@ -4,18 +4,40 @@
     <meta charset="UTF-8">
     <title>Salary Calculator</title>
     <style>
-    label{
-        display: block;
-    }
-    #divResult{
-        font-size: 18pt;
-        font-weight: bold;
-        color: red;
+        label{
+            display: block;
         }
-    .field{
-        margin-top: 5px;
-    }
+        #divResult{
+            font-size: 18pt;
+            font-weight: bold;
+            color: red;
+            }
+        .field{
+            margin-top: 5px;
+        }
     </style>
+    <script src="jquery-1.11.2.js"></script>
+    <script>
+    String.prototype.toInt = function(){
+        return parseInt(this,10);
+    };
+
+    $(function(){
+        $("#btnCalculate").click(function(){
+            var basic = $("#txtBasic").val().toInt(),
+                hra = $("#txtHra").val().toInt(),
+                da = $("#txtDa").val().toInt(),
+                tax = $("#rangeTax").val().toInt();
+
+            var gross = basic + hra + da;
+            var net = gross * ((100-tax)/100);
+            $("#divResult").html(net);
+        });
+        $("#rangeTax").change(function(){
+            $("#spanTax").html(this.value + '%');
+        });
+    });
+    </script>
 </head>
 <body>
     <h1>Salary Calculator</h1>

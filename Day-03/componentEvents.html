@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Events</title>
+	<script src="react.js"></script>
+	<script src="JSXTransformer.js"></script>
+</head>
+<body>
+	<script type="text/jsx">
+	var Parent = React.createClass({
+		componentWillMount : function(){
+			window.parent = this;
+			console.log("Parent - componentWillMount");
+		},
+		componentDidMount : function(){
+			console.log("Parent - componentDidMount");	
+		},
+		getInitialState : function(){
+
+			console.log("Parent - getInitialState");
+			return {
+				clickCount : 0
+			};
+		},
+		componentWillReceiveProps : function(){
+			console.log("Parent - componentWillReceiveProps");	
+		},
+		shouldComponentUpdate : function(){
+			console.log("Parent - shouldComponentUpdate");
+			return true;		
+		},
+		componentWillUpdate : function(){
+			console.log("Parent - componentWillUpdate");			
+		},
+		componentDidUpdate : function(){
+			console.log("Parent - componentDidUpdate");			
+		},
+		componentWillUnmount : function(){
+			console.log("Parent - componentWillUnmount");				
+		},
+		handleClick : function(){
+			this.setState({clickCount : ++this.state.clickCount})
+		},
+		render : function(){
+			console.log("Parent - render");
+			if (this.state.clickCount % 2 === 0){
+				return (
+					<div>
+						<h1 onClick={this.handleClick} >Parent</h1>
+						<Child clickCount={this.state.clickCount}/>
+					</div>
+				);
+			} else {
+				return (
+					<div>
+						<h1 onClick={this.handleClick} >Parent</h1>
+					</div>
+				);
+			}
+		}
+	});
+
+	var Child = React.createClass({
+		componentWillMount : function(){
+			window.child = this;
+			console.log("Child - componentWillMount");
+		},
+		componentDidMount : function(){
+			console.log("Child - componentDidMount");	
+		},
+		getInitialState : function(){
+			console.log("Child - getInitialState");
+			return {};
+		},
+		componentWillReceiveProps : function(){
+			console.log("Child - componentWillReceiveProps");	
+		},
+		shouldComponentUpdate : function(nextProps, nextState){
+			console.log("Child - shouldComponentUpdate", this.props);
+			return nextProps.clickCount % 2 === 0;
+			//return true;		
+		},
+		componentWillUpdate : function(){
+			console.log("Child - componentWillUpdate");			
+		},
+		componentDidUpdate : function(){
+			console.log("Child - componentDidUpdate");			
+		},
+		componentWillUnmount : function(){
+			console.log("Child - componentWillUnmount");				
+		},
+		render : function(){
+			console.log("Child - render");
+			var time = new Date().toString();
+			return (
+				<div>
+					<h2>Child</h2>
+					<div>
+						{this.props.clickCount}
+					</div>
+					<div>
+						{time}
+					</div>
+				</div>
+			);
+		}
+	});
+	React.render(<Parent />, document.body);
+	</script>
+</body>
+</html>

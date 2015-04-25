@@ -16,12 +16,12 @@ var AppCompnent = React.createClass({displayName: "AppCompnent",
 			return {data : sectionsData};
 	   },
 	   render : function(){
-	   	   console.log("AppComponent Render");
+	   	   
 	       return (
 	       		React.createElement("div", {className: "content"}, 
-		       		React.createElement(HeaderComponent, {title: "New Title"}), 
-		       		React.createElement(Container, {sectionsData: this.state.data}), 
-		       		React.createElement(FooterComponent, null)
+	       		React.createElement(HeaderComponent, {title: "New Title"}), 
+	       		React.createElement(Container, {sectionsData: this.state.data}), 
+	       		React.createElement(FooterComponent, null)
 	       		)
 	       	);
 	   }
@@ -32,14 +32,14 @@ var HeaderComponent = React.createClass({displayName: "HeaderComponent",
 		this.setState({title : "Title at component mount"});
 	},
 	getInitialState : function(){
+		console.log("getInitialState triggered");
 		return {
 			title : 'Initial title'
 		};
 	},
 	render : function(){
-		console.log("HeaderComponent Render");
 		window.headerComponent = this;
-		
+		console.log("header component rendered!");
 		return (
 			React.createElement("header", null, 
 				React.createElement("h1", null, this.state.title), 
@@ -52,7 +52,7 @@ var HeaderComponent = React.createClass({displayName: "HeaderComponent",
 var Container = React.createClass({displayName: "Container",
 
 	render : function(){
-		console.log("Container Render");
+		
 		var sectionComponents = this.props.sectionsData.map(function(sectionData, index){
 			return (
 				React.createElement(SectionComponent, {data: sectionData})
@@ -69,7 +69,6 @@ var Container = React.createClass({displayName: "Container",
 var SectionComponent = React.createClass({displayName: "SectionComponent",
 	
 	render : function(){
-		console.log("Section Render");
 		return (
 			React.createElement("section", null, 
 			React.createElement("h3", null, this.props.data.head), 
@@ -82,9 +81,7 @@ var SectionComponent = React.createClass({displayName: "SectionComponent",
 
 
 var FooterComponent = React.createClass({displayName: "FooterComponent",
-
 	render : function(){
-		console.log("Footer Render");
 		return (
 			React.createElement("footer", null, 
 				React.createElement("i", null, "Copyright - Accenture (2015)")

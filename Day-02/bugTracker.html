@@ -31,6 +31,7 @@
 	</style>
 	<script src="react.js"></script>
 	<script src="JSXTransformer.js"></script>
+	<script src="immutable.js"></script>
 </head>
 <body>
 	
@@ -41,23 +42,29 @@
 		var App = React.createClass({
 			getInitialState : function(){
 				return {
-					bugsList : [
-						{id : 1, title : "Unable to save data", isClosed : false},
-						{id : 2, title : "Application crashes frequently", isClosed : true},
-						{id : 3, title : "User authentication failure", isClosed : false}
-					]
+					bugsList : Immutable.List.of(
+						Immutable.Map({id : 1, title : "Unable to save data", isClosed : false}),
+						Immutable.Map({id : 2, title : "Application crashes frequently", isClosed : true}),
+						Immutable.Map({id : 3, title : "User authentication failure", isClosed : false})
+					)
 				};
 			},
 			add : function(bugTitle){
-				var newBug = {
+				var newBug = Immutable.map({
 					title : bugTitle,
 					isClosed : false
-				};
-				var bugsList = this.state.bugsList.concat([newBug]);
+				});
+				var bugsList = this.state.bugsList.push(newBug);
 				this.setState({bugsList : bugsList});
 			},
 			removeClosed : function(){
-
+				var openBugs = this.state.bugsList.filter(function(b){
+					return !b.get("isClosed");
+				});
+				console.table(openBugs.toArray());
+				this.setState({bugsList : openBugs});
+			
+				
 			},
 			render : function(){
 				return (
@@ -90,7 +97,7 @@
 						<label >Bug :</label>
 						<input type="text" ref="txtBug"  />
 						<input type="button" value="Add New" onClick={this.addNew} />
-						<input type="button" value="Remove Completed" onClick={this.removeCompleted} />
+						<input type="button" value="Remove Completed" onClick={this.props.onRemove} />
 					</div>
 				);
 			}
@@ -98,6 +105,7 @@
 		var BugsList = React.createClass({
 			render : function(){
 				var bugs = this.props.data;
+				console.table(bugs.toArray());
 				var bugItems = bugs.map(function(bug){
 					return <Bug data={bug} />
 				});
@@ -115,16 +123,14 @@
 				}
 			},
 			toggleBug : function(){
-				var bug = {
-					id : this.state.data.id,
-					title : this.state.data.title,
-					isClosed : !this.state.data.isClosed
-				};
-				this.setState({data : bug} );
+				var toggledBug = this.state.data.update("isClosed", function(){
+					return !this.state.data.get("isClosed");
+				}.bind(this));
+				this.setState({data : toggledBug} );
 			},
 			render : function(){
-				var bugClass = this.state.data.isClosed ? "closed" : "";
-				return <li className={bugClass} onClick={this.toggleBug}>{this.state.data.title}</li>;
+				var bugClass = this.state.data.get("isClosed") ? "closed" : "";
+				return <li className={bugClass} onClick={this.toggleBug}>{this.state.data.get("title")}</li>;
 			}
 		});
 		React.render(<App />, document.body);

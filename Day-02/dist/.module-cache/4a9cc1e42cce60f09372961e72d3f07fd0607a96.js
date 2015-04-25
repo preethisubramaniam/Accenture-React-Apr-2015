@@ -2,7 +2,7 @@ var AppCompnent = React.createClass({displayName: "AppCompnent",
 	   render : function(){
 	       return (
 	       		React.createElement("div", {className: "content"}, 
-	       		React.createElement(HeaderComponent, {title: "New Title"}), 
+	       		React.createElement(HeaderComponent, null), 
 	       		React.createElement(Container, null), 
 	       		React.createElement(FooterComponent, null)
 	       		)
@@ -11,21 +11,10 @@ var AppCompnent = React.createClass({displayName: "AppCompnent",
 	});
 
 var HeaderComponent = React.createClass({displayName: "HeaderComponent",
-	componentWillMount : function(){
-		this.setState({title : "Title at component mount"});
-	},
-	getInitialState : function(){
-		console.log("getInitialState triggered");
-		return {
-			title : 'Initial title'
-		};
-	},
 	render : function(){
-		window.headerComponent = this;
-		console.log("header component rendered!");
 		return (
 			React.createElement("header", null, 
-				React.createElement("h1", null, this.state.title), 
+				React.createElement("h1", null, "My Application"), 
 				React.createElement("i", null, "To change your future")
 			)
 			);

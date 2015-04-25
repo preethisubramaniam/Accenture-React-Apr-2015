@@ -11,9 +11,6 @@ var AppCompnent = React.createClass({displayName: "AppCompnent",
 	});
 
 var HeaderComponent = React.createClass({displayName: "HeaderComponent",
-	componentWillMount : function(){
-		this.setState({title : "Title at component mount"});
-	},
 	getInitialState : function(){
 		console.log("getInitialState triggered");
 		return {

@@ -2,19 +2,30 @@ var AppCompnent = React.createClass({
 	   render : function(){
 	       return (
 	       		<div className="content">
-	       		<Header/>
+	       		<HeaderComponent title="New Title"/>
 	       		<Container/>
-	       		<Footer/>
+	       		<FooterComponent/>
 	       		</div>
 	       	);
 	   }
 	});
 
-var Header = React.createClass({
+var HeaderComponent = React.createClass({
+	componentWillMount : function(){
+		this.setState({title : "Title at component mount"});
+	},
+	getInitialState : function(){
+		console.log("getInitialState triggered");
+		return {
+			title : 'Initial title'
+		};
+	},
 	render : function(){
+		window.headerComponent = this;
+		console.log("header component rendered!");
 		return (
 			<header>
-				<h1>My Application</h1>
+				<h1>{this.state.title}</h1>
 				<i>To change your future</i>
 			</header>
 			);
@@ -54,7 +65,7 @@ var Section2 = React.createClass({
 	}	
 });
 
-var Footer = React.createClass({
+var FooterComponent = React.createClass({
 	render : function(){
 		return (
 			<footer>
